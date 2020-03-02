@@ -1,5 +1,0 @@
-package trianglepuzzle
-
-class game {
-  
-}
