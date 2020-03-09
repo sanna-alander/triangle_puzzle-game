@@ -1,1 +1,13 @@
-Hello! :)
+
+
+
+1st checkpoint (10.3.2020)
+
+- Created the project and all the classes so far.
+- Class Piece methods rotate and flip have been implemented not tested yet.
+- Methods for adding and removing pieces form the pile and the board have also been implemented.
+- Implemented a private method in class 'Pile' for randomly selecting a symbol.
+- Time spent approximately: 5-10 hours
+
+
+2nd checkpoint ()

@@ -2,13 +2,15 @@ package trianglepuzzle
 
 import scala.collection.mutable.Buffer
 
-class Piece {
+class Piece(symbol1: Char, symbol2: Char, symbol3: Char) {
   
   var coordinates = ???
   
-  val symbols = Buffer[Char]()
+  val symbols = Buffer[Char](symbol1, symbol2, symbol3)
   
   var upsidedown: Boolean = false
+  
+  private var location = ???
   
   
   def rotate = {    // Method which rotates the piece, meaning it changes the order of the symbols which determines the rotation.
@@ -21,5 +23,10 @@ class Piece {
     }
   }
   
+  def flip = {
+    if (upsidedown) upsidedown = false else if (!upsidedown) upsidedown = true
+  }
+  
+  def movePiece = ???
   
 }
