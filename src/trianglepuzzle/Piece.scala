@@ -2,18 +2,16 @@ package trianglepuzzle
 
 import scala.collection.mutable.Buffer
 
-class Piece(symbol1: Char, symbol2: Char, symbol3: Char) {
+class Piece(symbol1: Char, symbol2: Char, symbol3: Char, coordinates: Option[(Int, Int)], down: Boolean) {
   
-  var coordinates = ???
+  val symbols = Buffer[Char](symbol1, symbol2, symbol3)  // The symbols of the triangle. Their index determines their place. Index 0 is the bottom.
   
-  val symbols = Buffer[Char](symbol1, symbol2, symbol3)
+  var upsidedown: Boolean = down  // A variable that determines whether the triangle is upside down or not.
   
-  var upsidedown: Boolean = false
-  
-  private var location = ???
+  var location = coordinates  // The first coordinate represents the row and the second represents the column that the piece is in. 
   
   
-  def rotate = {    // Method which rotates the piece, meaning it changes the order of the symbols which determines the rotation.
+  def rotate = {    // Method which rotates the piece once, meaning it changes the order of the symbols which determines the rotation.
                     // Rotates the symbols clockwise, meaning that the char at place 0 will move to 1.
     
     for (s <- 0 until 3) {   
@@ -23,7 +21,11 @@ class Piece(symbol1: Char, symbol2: Char, symbol3: Char) {
     }
   }
   
-  def flip = {
+  def rotateTimes(times: Int) {
+    ???
+  }
+  
+  def flip = {  // This method flips the triangle.
     if (upsidedown) upsidedown = false else if (!upsidedown) upsidedown = true
   }
   

@@ -2,18 +2,28 @@ package trianglepuzzle
 
 import scala.collection.mutable.Buffer
 
-class Board {
+class Board(givenPieces: Buffer[Piece]) {
   
-  val pieces = Buffer[Piece]()
+  private var currentPieces = givenPieces
   
-  val empty = if (pieces.nonEmpty) false else true
+  def pieces = this.currentPieces
+  
+  // var empty = emptiness
+  
+  /*def clearBoard = {
+    empty = true
+  }*/
   
   def addPiece(piece: Piece) = {
-    this.pieces += piece
+    this.currentPieces += piece
   }
   
   def removePiece(piece: Piece) = {
-    ???
+    this.currentPieces.remove(this.currentPieces.indexOf(piece))
+  }
+  
+  def getPiece(coords: (Int, Int)): Option[Piece] = {   // Method that returns a piece at a certain location wrapped in an option.
+    this.currentPieces.find( _.location == Option(coords))
   }
   
 }
