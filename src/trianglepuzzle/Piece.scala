@@ -21,7 +21,7 @@ class Piece(symbol1: Char, symbol2: Char, symbol3: Char, coordinates: Option[(In
     }
   }
   
-  def rotateTimes(times: Int) {
+  def rotateTimes(times: Int) {  
     ???
   }
   

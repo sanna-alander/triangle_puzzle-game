@@ -2,9 +2,10 @@ package trianglepuzzle
 
 import scala.collection.mutable.Buffer
 
-class Pile {
+class Pile(val game: Game) {
   
-  val pieces = Buffer[Piece]()
+    
+  val pieces = game.correctSolution.pieces
   
   def remove(p: Piece) = this.pieces.remove(this.pieces.indexOf(p))
   
