@@ -45,7 +45,7 @@ object puzzleApp extends SimpleSwingApplication {
 
   override def paintComponent(g : Graphics2D) = {
     g.setColor(Color.white)   
-    g.fillRect(20, 20, 200, 400)
+    g.fillRect(20, 20, 200, 600)
 
     
   }

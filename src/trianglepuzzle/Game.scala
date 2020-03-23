@@ -61,7 +61,7 @@ class Game(val board: Board) {
     
   }
   
-  private val solution: Board = generateSolution  // maybe a board maybe just pieces idk yet
+  private val solution: Board = generateSolution  
   
   def correctSolution = this.solution
   
