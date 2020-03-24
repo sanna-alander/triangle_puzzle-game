@@ -38,11 +38,9 @@ class Game(val board: Board) {
     }
   }
   
-  private def randomPieceWith2Req(symbols: (Char, Char), coordinates: Option[(Int, Int)], placings: (Int, Int), down: Boolean): Piece = {
+  private def randomPieceWith2Req(symbols: (Char, Char), coordinates: Option[(Int, Int)], placings: (Int, Int), down: Boolean) = {
     
-    var sym1 = findSym(symbols._1)
-    var sym2 = findSym(symbols._2)
-    
+
     def findSym(sym: Char) = {
       sym match {
         case 'a' => 'A'
@@ -53,10 +51,15 @@ class Game(val board: Board) {
         case 'C' => 'c'
       }
     }
+    
+    var sym1 = findSym(symbols._1)
+    var sym2 = findSym(symbols._2)
+    
     placings match {
       case (0, 1) => new Piece(sym1, sym2, randomSymbol, coordinates, down)
       case (0, 2) => new Piece(sym1, randomSymbol, sym2, coordinates, down)
       case (1, 2) => new Piece(randomSymbol, sym1, sym2, coordinates, down)
+      case _ => 
     }   
     
   }
@@ -73,7 +76,7 @@ class Game(val board: Board) {
     board.addPiece(randomFirstPiece(1, false))  // adding the piece at (1, 1)
     board.addPiece(randomFirstPiece(4, true))   // adding the piece at (4, 1)
     
-    for (i <- 2 until 5) {
+    for (i <- 2 until 6) {
       val symbol: Char = board.getPiece((1, i-1)).get.symbols(if (i % 2 != 0) 2 else 1)
       val placing = if (i % 2 != 0) 1 else 2 
       val down = i % 2 != 0
@@ -86,7 +89,7 @@ class Game(val board: Board) {
       board.addPiece(piece)  
     }
     
-    for (i <- 2 until 5) {
+    for (i <- 2 until 6) {
       val symbol: Char = board.getPiece((1, i-1)).get.symbols(if (i % 2 == 0) 2 else 1)
       val placing = if (i % 2 == 0) 1 else 2 
       val down = i % 2 == 0
@@ -99,11 +102,11 @@ class Game(val board: Board) {
       board.addPiece(piece)  
     }
     
-    for (i <- 1 until 7) {
+    /*for (i <- 1 until 7) {
       val symbols: (Char, Char) = {
         
       }
-    }
+    }*/
       
     
     println(board.pieces)

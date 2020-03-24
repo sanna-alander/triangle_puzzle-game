@@ -6,7 +6,7 @@ import trianglepuzzle._
 import scala.collection.mutable.Buffer
 
 
-class UnitTests extends FlatSpec {
+class PuzzleTests extends FlatSpec() {
   
   val board = new Board(Buffer[Piece]())
   val game = new Game(board) 
@@ -14,7 +14,7 @@ class UnitTests extends FlatSpec {
   
   "game.generateSolution" should "create a random solution" in {
     val solution = game.correctSolution
-    assert(solution.pieces.size === 5)
+    assert(solution.pieces.size === 10)
   }
   
 }

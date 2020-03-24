@@ -12,13 +12,13 @@
 
 2nd checkpoint (24.3.2020)
 
-- I've Finished implementing most methods in the main classes. I unfortunately haven't been able to test any of them yet. 
+- I've Finished implementing most methods in the main classes. I have only tested them very little. 
 - Started working on the GUI. I haven't really made a lot of progress with that because it's been slightly hard
   to find information on it. 
 - I have also tried to start working on the class for file operations such as saving the game state into a file 
   but haven't really made any progress with that either. 
-- I've also had some trouble with testing. I don't really know how to test my methods. 
-- Time spent approximately: 10 hours
+- I had some trouble with testing but got it to work out in the end.  
+- Time spent approximately: 10-15 hours
 
 
 3rd checkpoint (7.4.2020)
