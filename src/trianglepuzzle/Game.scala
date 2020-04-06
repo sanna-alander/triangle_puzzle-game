@@ -5,7 +5,6 @@ import scala.util.Random
 
 class Game(val board: Board) {
   
-  // val pieces = Array.ofDim[Piece](24)
   
   private def randomSymbol: Char = {    // A helper method for generating a random symbol.
     val symbols = Vector('a', 'b', 'c', 'A', 'B', 'C')
@@ -38,7 +37,7 @@ class Game(val board: Board) {
     }
   }
   
-  private def randomPieceWith2Req(symbols: (Char, Char), coordinates: Option[(Int, Int)], placings: (Int, Int), down: Boolean) = {
+  private def randomPieceWith2Req(symbols: (Char, Char), coordinates: Option[(Int, Int)], placings: (Int, Int), down: Boolean): Piece = {
     
 
     def findSym(sym: Char) = {
@@ -59,65 +58,124 @@ class Game(val board: Board) {
       case (0, 1) => new Piece(sym1, sym2, randomSymbol, coordinates, down)
       case (0, 2) => new Piece(sym1, randomSymbol, sym2, coordinates, down)
       case (1, 2) => new Piece(randomSymbol, sym1, sym2, coordinates, down)
-      case _ => 
+      case _      => new Piece(randomSymbol, randomSymbol, randomSymbol, coordinates, down) //
     }   
     
   }
-  
-  private val solution: Board = generateSolution  
-  
-  def correctSolution = this.solution
+
   
   def generateSolution: Board = {
     val board = new Board(Buffer[Piece]()) 
     
-    def check(p: Piece): Boolean = board.pieces.contains(p)
+    def check(p: Piece): Boolean = board.pieces.exists( _.equals(p) )
     
-    board.addPiece(randomFirstPiece(1, false))  // adding the piece at (1, 1)
-    board.addPiece(randomFirstPiece(4, true))   // adding the piece at (4, 1)
+    def addFirst(row: Int, down: Boolean): Piece = {
+      var piece = randomFirstPiece(row, down)
+      while (check(piece)) {
+        piece = randomFirstPiece(row, down)
+      }
+      piece
+    }
     
+    // adding the first pieces
+    board.addPiece(addFirst(1, false))
+    board.addPiece(addFirst(4, true))
+    board.addPiece(addFirst(2, false))
+    
+    var row3First = randomPieceWith1Req(board.getPiece((2, 1)).get.symbols(0), Option(3, 1), 0, true)
+    while (check(row3First)) {
+      row3First = randomPieceWith1Req(board.getPiece((2, 1)).get.symbols(0), Option(3, 1), 0, true)
+    }
+    board.addPiece(row3First)
+    
+    //adding pieces of the first row
     for (i <- 2 until 6) {
       val symbol: Char = board.getPiece((1, i-1)).get.symbols(if (i % 2 != 0) 2 else 1)
       val placing = if (i % 2 != 0) 1 else 2 
       val down = i % 2 != 0
       var piece = randomPieceWith1Req(symbol, Option(1, i), placing, down)
       
-      while (check(piece)) {
+      if (check(piece)) {
         piece = randomPieceWith1Req(symbol, Option(1, i), placing, down)
       }
       
       board.addPiece(piece)  
     }
     
+    //adding pieces of the fourth row
     for (i <- 2 until 6) {
-      val symbol: Char = board.getPiece((1, i-1)).get.symbols(if (i % 2 == 0) 2 else 1)
+      val symbol: Char = board.getPiece((4, i-1)).get.symbols(if (i % 2 == 0) 2 else 1)
       val placing = if (i % 2 == 0) 1 else 2 
       val down = i % 2 == 0
-      var piece = randomPieceWith1Req(symbol, Option(1, i), placing, down)
+      var piece = randomPieceWith1Req(symbol, Option(4, i), placing, down)
       
-      while (check(piece)) {
-        piece = randomPieceWith1Req(symbol, Option(1, i), placing, down)
+      if (check(piece)) {
+        piece = randomPieceWith1Req(symbol, Option(4, i), placing, down)
       }
       
       board.addPiece(piece)  
     }
     
-    /*for (i <- 1 until 7) {
-      val symbols: (Char, Char) = {
+    //adding pieces of the second row
+    for (i <- 2 until 8) {
+      if (i % 2 == 0) {
+        val symbols: (Char, Char) = {
+            (board.getPiece(1, i-1).get.symbols(0), board.getPiece(2, i-1).get.symbols(2))
+        }
+        val placings = (0, 2)
+        val down = true
+        var piece = randomPieceWith2Req(symbols, Option(2, i), placings, down)
+        if (check(piece)) {
+          piece = randomPieceWith2Req(symbols, Option(2, i), placings, down)
+        }
+        board.addPiece(piece)
         
+      } else {
+        val symbol = board.getPiece(2, i-1).get.symbols(1)
+        val placing = 1
+        val down = false
+        var piece = randomPieceWith1Req(symbol, Option(2, i), placing, down)
+        if (check(piece)) {
+          piece = randomPieceWith1Req(symbol, Option(2, i), placing, down)
+        }
+        board.addPiece(piece)
       }
-    }*/
-      
+        
+    }
     
-    println(board.pieces)
+    //adding pieces of the third row
+    for (i <- 2 until 8) {
+      val symbols = if (i % 2 == 0) (board.getPiece(4, i-1).get.symbols(0), board.getPiece(3, i-1).get.symbols(1)) else {
+        (board.getPiece(2, i).get.symbols(0), board.getPiece(3, i-1).get.symbols(2))
+      }
+      val placings = if (i % 2 == 0) (0, 1) else (0, 2)
+      val down = i % 2 != 0
+      var piece = randomPieceWith2Req(symbols, Option(3, i), placings, down)
+      if (check(piece)) {
+        piece = randomPieceWith2Req(symbols, Option(3, i), placings, down)
+      }
+      board.addPiece(piece)
+    }
+    
+    //board.pieces.foreach(n => println(n.location))
+    board.pieces.foreach(n => println(n.symbols))
     
     board
     
   }
   
-  def hasEnded = this.board.pieces == this.solution.pieces
+  private val solution: Board = {
+    var solution = generateSolution
+    while (!solution.allDifferent) solution = generateSolution
+    solution
+  }
   
-  def startGame = ???
+  def correctSolution = this.solution
+  
+  def solutionFound(givenBoard: Board): Boolean = { //Checks whether the correct solution has been found.
+    givenBoard.pieces.size == 24 && givenBoard.equals(this.solution)
+  }
+
   
   
   

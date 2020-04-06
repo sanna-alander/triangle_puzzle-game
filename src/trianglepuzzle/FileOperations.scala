@@ -12,16 +12,33 @@ import scala.collection.mutable.Buffer
 
 object FileOperations {
   
-  def loadGame: Game = {
+  def writeToFile(fileName: String, arr: Seq[String]) = {
     
-    var pieces = Buffer[Piece]()
+    try {
+      val fileOut = new FileWriter(fileName)
+      
+      val linesOut = new BufferedWriter(fileOut)
+      
+      try {
+        
+        
+        for (a <- arr) {
+          var oneLine = linesOut.write(a)
+          
+        }
+        
+      } finally {
+        
+        fileOut.close()
+        linesOut.close()
+        
+      }
+    } catch {
+      case notFound: FileNotFoundException => println("File not found.")
+      case e: IOException => println("Writing finished with an error.")
+    }
     
     
-    
-    val board = new Board(pieces)
-    val game  = new Game(board)
-    
-    game
   }
   
   

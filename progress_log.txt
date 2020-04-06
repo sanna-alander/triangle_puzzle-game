@@ -22,3 +22,9 @@
 
 
 3rd checkpoint (7.4.2020)
+
+- Finished implementing the key methods and tested that everything should be working like expected.
+- I'm having some trouble working with the GUI and actually getting the game to work.
+- All methods have been mostly implemented. The game can now form a random solution with 24 unique pieces correctly. 
+- I still need to work a lot on the GUI as well as the object for saving the game into a file.
+- Time spent approximately: 10-15 hours
