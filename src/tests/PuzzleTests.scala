@@ -8,20 +8,21 @@ import scala.collection.mutable.Buffer
 
 class PuzzleTests extends FlatSpec() {
   
-  val board = new Board(Buffer[Piece]())
-  val game = new Game(board) 
+  val thisboard = new Board(Buffer[Piece]())
+  val thisgame = new Game(thisboard) 
   
-    val pieceA = new Piece('a', 'C', 'b', None, false)
-    val pieceB = new Piece('b', 'a', 'C', None, false)
+    val pieceA = new Piece('a', 'C', 'b', Option(1,1), false)
+    val pieceB = new Piece('b', 'a', 'C', Option(2,4), false)
     val pieceC = new Piece('b', 'b', 'b', None, false)
   
   "game.generateSolution" should "create a random solution" in {
-    val solution = game.correctSolution
+    val solution = thisgame.correctSolution
     assert(solution.pieces.size === 24)
+    assert(solution.allDifferent === true)
   }
   
   
-  "pile.shuffle" should "shuffle the pile" in { //not a working test
+  "pile.shuffle" should "shuffle the pile" in { 
     val pile1 = new Pile (Buffer(pieceA, pieceB, pieceC))
     pile1.shuffle
     val pile2 = new Pile (Buffer(pieceA, pieceB, pieceC))
@@ -56,6 +57,16 @@ class PuzzleTests extends FlatSpec() {
     val solution = game.correctSolution
     
     assert(game.solutionFound(solution) === true)
+  }
+  
+  "FileOperations.getString" should "get the string for saving" in {
+    val board = new Board(Buffer(pieceA, pieceB))
+    val game = new Game(board)
+    val pile = new Pile(Buffer())
+    
+    assert(FileOperations.getString(game, board, pile) === 
+      Seq("B" + board.pieces(0).symbols.mkString + board.pieces(0).location.get._1 + board.pieces(0).location.get._2 + board.pieces(0).upsidedown, 
+          "B" + board.pieces(1).symbols.mkString + board.pieces(1).location.get._1 + board.pieces(1).location.get._2 + board.pieces(1).upsidedown))
   }
   
   

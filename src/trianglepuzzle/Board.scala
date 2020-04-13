@@ -31,7 +31,7 @@ class Board(givenPieces: Buffer[Piece]) {
     values.forall(_ == true)
   }
   
-  def allDifferent: Boolean = {
+  def allDifferent: Boolean = {  //Checks if all of the pieces in this board are different.
     
     val values = Buffer[Boolean]()
     var pieces2 = this.pieces

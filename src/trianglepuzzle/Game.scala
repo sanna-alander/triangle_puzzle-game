@@ -90,14 +90,10 @@ class Game(val board: Board) {
     
     //adding pieces of the first row
     for (i <- 2 until 6) {
-      val symbol: Char = board.getPiece((1, i-1)).get.symbols(if (i % 2 != 0) 2 else 1)
+      val symbol: Char = board.getPiece((1, i-1)).get.symbols(if (i % 2 == 0) 2 else 1)
       val placing = if (i % 2 != 0) 1 else 2 
-      val down = i % 2 != 0
+      val down = i % 2 == 0
       var piece = randomPieceWith1Req(symbol, Option(1, i), placing, down)
-      
-      if (check(piece)) {
-        piece = randomPieceWith1Req(symbol, Option(1, i), placing, down)
-      }
       
       board.addPiece(piece)  
     }
@@ -108,10 +104,6 @@ class Game(val board: Board) {
       val placing = if (i % 2 == 0) 1 else 2 
       val down = i % 2 == 0
       var piece = randomPieceWith1Req(symbol, Option(4, i), placing, down)
-      
-      if (check(piece)) {
-        piece = randomPieceWith1Req(symbol, Option(4, i), placing, down)
-      }
       
       board.addPiece(piece)  
     }
@@ -125,9 +117,7 @@ class Game(val board: Board) {
         val placings = (0, 2)
         val down = true
         var piece = randomPieceWith2Req(symbols, Option(2, i), placings, down)
-        if (check(piece)) {
-          piece = randomPieceWith2Req(symbols, Option(2, i), placings, down)
-        }
+
         board.addPiece(piece)
         
       } else {
@@ -135,9 +125,7 @@ class Game(val board: Board) {
         val placing = 1
         val down = false
         var piece = randomPieceWith1Req(symbol, Option(2, i), placing, down)
-        if (check(piece)) {
-          piece = randomPieceWith1Req(symbol, Option(2, i), placing, down)
-        }
+
         board.addPiece(piece)
       }
         
@@ -151,14 +139,13 @@ class Game(val board: Board) {
       val placings = if (i % 2 == 0) (0, 1) else (0, 2)
       val down = i % 2 != 0
       var piece = randomPieceWith2Req(symbols, Option(3, i), placings, down)
-      if (check(piece)) {
-        piece = randomPieceWith2Req(symbols, Option(3, i), placings, down)
-      }
+
       board.addPiece(piece)
     }
     
     //board.pieces.foreach(n => println(n.location))
-    board.pieces.foreach(n => println(n.symbols))
+    //board.pieces.foreach(n => println(n.upsidedown))
+    // board.pieces.foreach(n => println(n.symbols))
     
     board
     

@@ -12,6 +12,26 @@ import scala.collection.mutable.Buffer
 
 object FileOperations {
   
+  def getString(game: Game, board: Board, pile: Pile): Seq[String] = {
+    var arr = Buffer[String]()
+    
+    for (i <- board.pieces) {
+      var word = ""
+      val coords = i.location.get
+      word = word + "B" + i.symbols.mkString + coords._1 + coords._2 + i.upsidedown
+      arr += word      
+    }
+    
+    for (i <- pile.pieces) {
+      var word = ""
+      val coords = i.location.get
+      word = word + "P" + i.symbols.mkString + coords._1 + coords._2 + i.upsidedown
+      arr += word     
+    }
+    
+    arr.toSeq
+  }
+  
   def writeToFile(fileName: String, arr: Seq[String]) = {
     
     try {

@@ -5,11 +5,16 @@ import scala.util.Random
 
 class Pile(givenPieces: Buffer[Piece]) {
   
-  val firstPieces = givenPieces
+  val copied = Buffer[Piece]()
   
-  firstPieces.foreach( _.updateLocation(None)) //Change the location of the pieces to None because in the pile the pieces don't have coordinates.
+  for (i <- givenPieces) {
+    val syms = i.symbols
+    copied += new Piece(syms(0), syms(1), syms(2), None, i.upsidedown)
+  }
+  
+  //copied.foreach( _.updateLocation(None)) //Change the location of the pieces to None because in the pile the pieces don't have coordinates.
 
-  var pieces: Buffer[Piece] = firstPieces
+  var pieces: Buffer[Piece] = copied
   
   def remove(p: Piece) = this.pieces.remove(this.pieces.indexOf(p))
   

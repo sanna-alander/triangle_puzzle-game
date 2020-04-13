@@ -8,7 +8,10 @@ class Piece(symbol1: Char, symbol2: Char, symbol3: Char, coordinates: Option[(In
   
   var upsidedown: Boolean = down  // A variable that determines whether the triangle is upside down or not.
   
-  var location = coordinates  // The first coordinate represents the row and the second represents the column that the piece is in. 
+  var location = {
+    //println(coordinates)
+    coordinates  // The first coordinate represents the row and the second represents the column that the piece is in. 
+  }
   
   
   def rotate = {    // Method which rotates the piece once, meaning it changes the order of the symbols which determines the rotation.
@@ -28,7 +31,7 @@ class Piece(symbol1: Char, symbol2: Char, symbol3: Char, coordinates: Option[(In
   
   def updateLocation(newLocation: Option[(Int, Int)]) = location = newLocation
   
-  def equals(piece: Piece): Boolean = {
+  def equals(piece: Piece): Boolean = { //Checks if two pieces are equal, meaning if they're the same in any position.
     
     val values = Buffer[Boolean]() 
     
