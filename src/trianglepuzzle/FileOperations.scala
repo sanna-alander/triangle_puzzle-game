@@ -24,8 +24,7 @@ object FileOperations {
     
     for (i <- pile.pieces) {
       var word = ""
-      val coords = i.location.get
-      word = word + "P" + i.symbols.mkString + coords._1 + coords._2 + i.upsidedown
+      word = word + "P" + i.symbols.mkString + i.upsidedown
       arr += word     
     }
     

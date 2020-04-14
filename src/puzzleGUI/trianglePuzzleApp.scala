@@ -19,6 +19,7 @@ import scala.math._
 
 object puzzleApp extends SimpleSwingApplication {
   
+  var selected = None
   
   val triangle1 = ImageIO.read(new File("triangle1.png"))
   val triangle2 = ImageIO.read(new File("triangle2.png"))
@@ -34,7 +35,79 @@ object puzzleApp extends SimpleSwingApplication {
                  (3,1) -> (10, 2*(boardheight/4).toInt), (3,2) -> (10+(boardwidth/8).toInt, 2*(boardheight/4).toInt), 
                  (3,3) -> (10+2*(boardwidth/8).toInt, 2*(boardheight/4).toInt),
                  (3,4) -> (10+3*(boardwidth/8).toInt, 2*(boardheight/4).toInt), (3,5) -> (10+4*(boardwidth/8).toInt, 2*(boardheight/4).toInt),
-                 (3,6) -> (10+5*(boardwidth/8).toInt, 2*(boardheight/4).toInt), (3,7) -> (10+6*(boardwidth/8).toInt, 2*(boardheight/4).toInt))
+                 (3,6) -> (10+5*(boardwidth/8).toInt, 2*(boardheight/4).toInt), (3,7) -> (10+6*(boardwidth/8).toInt, 2*(boardheight/4).toInt),
+                 (4,1) -> ((boardwidth/8).toInt+10, 3*(boardheight/4).toInt), (4,2) -> (2*((boardwidth/8).toInt)+10,3*(boardheight/4).toInt), 
+                 (4,3) -> (3*((boardwidth/8).toInt)+10,3*(boardheight/4).toInt),
+                 (4,4) -> (4*((boardwidth/8).toInt)+10,3*(boardheight/4).toInt), (4,5) -> (5*((boardwidth/8).toInt)+10,3*(boardheight/4).toInt))
+                 
+                 
+  
+  val x1 = 170 to 230
+  val y1 = 10 to 90
+  val x2 = 270 to 330
+  val x3 = 370 to 430
+  val x4 = 470 to 530
+  val x5 = 570 to 630
+  
+  val x6 = 70 to 130
+  val y6 = 100 to 190
+  val x7 = 170 to 230
+  val x8 = 270 to 330
+  val x9 = 370 to 420
+  val x10 = 470 to 530
+  val x11 = 570 to 630
+  val x12 = 670 to 730
+  
+  val x13 = 70 to 130
+  val y13 = 200 to 290
+  val x14 = 170 to 230
+  val x15 = 270 to 330
+  val x16 = 370 to 420
+  val x17 = 470 to 530
+  val x18 = 570 to 630
+  val x19 = 670 to 730
+  
+  val x20 = 170 to 230
+  val y20 = 300 to 390
+  val x21 = 270 to 330
+  val x22 = 370 to 430
+  val x23 = 470 to 530
+  val x24 = 570 to 630
+  
+  
+  
+  
+  
+  def getCoords(p: (Int, Int)): Option[(Int, Int)] = {  // this method is for finding the coordinates of the board that match the clicked point
+    
+    var coords: Option[(Int, Int)] = None
+    if ((x1.contains(p._1)) && (y1.contains(p._2))) coords = Option((1,1))
+    if ((x2.contains(p._1)) && (y1.contains(p._2))) coords = Option((1,2))
+    if ((x3.contains(p._1)) && (y1.contains(p._2))) coords = Option((1,3))
+    if ((x4.contains(p._1)) && (y1.contains(p._2))) coords = Option((1,4))
+    if ((x5.contains(p._1)) && (y1.contains(p._2))) coords = Option((1,5))
+    if ((x6.contains(p._1)) && (y6.contains(p._2))) coords = Option((2,1))
+    if ((x7.contains(p._1)) && (y6.contains(p._2))) coords = Option((2,2))
+    if ((x8.contains(p._1)) && (y6.contains(p._2))) coords = Option((2,3))
+    if ((x9.contains(p._1)) && (y6.contains(p._2))) coords = Option((2,4))
+    if ((x10.contains(p._1)) && (y6.contains(p._2))) coords = Option((2,5))
+    if ((x11.contains(p._1)) && (y6.contains(p._2))) coords = Option((2,6))
+    if ((x12.contains(p._1)) && (y6.contains(p._2))) coords = Option((2,7))
+    if ((x13.contains(p._1)) && (y13.contains(p._2))) coords = Option((3,1))
+    if ((x14.contains(p._1)) && (y13.contains(p._2))) coords = Option((3,2))
+    if ((x15.contains(p._1)) && (y13.contains(p._2))) coords = Option((3,3))
+    if ((x16.contains(p._1)) && (y13.contains(p._2))) coords = Option((3,4))
+    if ((x17.contains(p._1)) && (y13.contains(p._2))) coords = Option((3,5))
+    if ((x18.contains(p._1)) && (y13.contains(p._2))) coords = Option((3,6))
+    if ((x19.contains(p._1)) && (y13.contains(p._2))) coords = Option((3,7))
+    if ((x20.contains(p._1)) && (y20.contains(p._2))) coords = Option((4,1))
+    if ((x21.contains(p._1)) && (y20.contains(p._2))) coords = Option((4,2))
+    if ((x22.contains(p._1)) && (y20.contains(p._2))) coords = Option((4,3))
+    if ((x23.contains(p._1)) && (y20.contains(p._2))) coords = Option((4,4))
+    if ((x24.contains(p._1)) && (y20.contains(p._2))) coords = Option((4,5))
+    
+    coords
+  }
       
   
   var board = new Board(Buffer[Piece]())
@@ -55,21 +128,16 @@ object puzzleApp extends SimpleSwingApplication {
     
   }
   
-  def update = {
+  def update() = {
     
     ended = this.game.solutionFound(this.board)
   }
-  
-  def endGame = if (ended) ???
-  
-  def mouseClick(x: Int, y: Int) = {
-    
-  }
+
   
   def drawTriangles(g: Graphics2D) = {
     g.setFont(new Font("Times New Roman", java.awt.Font.BOLD, 20))
     
-    for (a <- this.board.pieces.filterNot(_.location.get._1 == 4)) {
+    for (a <- this.board.pieces) {
       val coords = positions.get(a.location.get).get
       val rotation = a.upsidedown
       if (rotation) {
@@ -86,24 +154,31 @@ object puzzleApp extends SimpleSwingApplication {
       
     }
     val pileCoords = (boardwidth.toInt+100, (boardheight/2).toInt)
-    val a = pile.pieces(0)
-    if (pile.pieces(0).upsidedown) {
-      g.drawImage(triangle2, pileCoords._1,pileCoords._2, null)
-      g.drawString(a.symbols(0).toString, pileCoords._1+(boardwidth/8).toInt-10, pileCoords._2+30)
-      g.drawString(a.symbols(1).toString, pileCoords._1+(boardwidth/8).toInt+10, pileCoords._2+60)
-      g.drawString(a.symbols(2).toString, pileCoords._1+(boardwidth/12).toInt-10, pileCoords._2+60)
-    } else {
-      g.drawImage(triangle1, pileCoords._1,pileCoords._2, null)
-      g.drawString(a.symbols(0).toString, pileCoords._1+(boardwidth/8).toInt-10, pileCoords._2+90)
-      g.drawString(a.symbols(1).toString, pileCoords._1+(boardwidth/12).toInt-10, pileCoords._2+60)
-      g.drawString(a.symbols(2).toString, pileCoords._1+(boardwidth/8).toInt+10, pileCoords._2+60)      
+    
+    if (this.pile.pieces.nonEmpty) {
+      val a = pile.pieces(0)
+      if (pile.pieces(0).upsidedown) {
+        g.drawImage(triangle2, pileCoords._1,pileCoords._2, null)
+        g.drawString(a.symbols(0).toString, pileCoords._1+(boardwidth/8).toInt-10, pileCoords._2+30)
+        g.drawString(a.symbols(1).toString, pileCoords._1+(boardwidth/8).toInt+10, pileCoords._2+60)
+        g.drawString(a.symbols(2).toString, pileCoords._1+(boardwidth/12).toInt-10, pileCoords._2+60)
+      } else {
+        g.drawImage(triangle1, pileCoords._1,pileCoords._2, null)
+        g.drawString(a.symbols(0).toString, pileCoords._1+(boardwidth/8).toInt-10, pileCoords._2+90)
+        g.drawString(a.symbols(1).toString, pileCoords._1+(boardwidth/12).toInt-10, pileCoords._2+60)
+        g.drawString(a.symbols(2).toString, pileCoords._1+(boardwidth/8).toInt+10, pileCoords._2+60)      
+      }
+      
     }
+
   }
 
   
   val saveButton = new Button("Save")
   val newGameButton = new Button("New game")
   val loadButton = new Button("Load game")
+  val hintButton = new Button("Hint")  // I decided to add a hint button. When this button is clicked, the hint for the next piece in the pile
+                                       // is printed in the console.
   
   val shuffleButton = new Button("Shuffle")
   val shuffleText = new Label("Press to shuffle pieces")
@@ -129,6 +204,7 @@ object puzzleApp extends SimpleSwingApplication {
   buttons.contents += saveButton
   buttons.contents += newGameButton
   buttons.contents += loadButton
+  buttons.contents += hintButton
   buttons.border = Swing.EmptyBorder(40, 40, 40, 40)
   buttons.background = Color.WHITE
   
@@ -192,10 +268,13 @@ object puzzleApp extends SimpleSwingApplication {
       g.setFont(new Font("Times New Roman", java.awt.Font.BOLD, 20))
       
     }
-    
     //drawTriangle(pile.pieces(0).symbols, triangle1)
-    drawTriangles(g)
     
+    drawTriangles(g)
+    if (ended) {
+      g.setFont(new Font("Times New Roman", java.awt.Font.BOLD, 60))
+      g.drawString("You figured out the puzzle!", (width/2).toInt, (height/2).toInt)
+    }
   }
     
 
@@ -204,7 +283,35 @@ object puzzleApp extends SimpleSwingApplication {
 
 }
   
+  val ups = Buffer((1,1), (1,3), (1,5), (2,1), (2,3), (2,5), (2,7), (3,2), (3,4), (3,6), (4,2), (4,4))
+  
+  
   reactions += {
+    case e@ MouseClicked(src,point,mod,1,_) => {
+      
+      val coords = getCoords((point.x, point.y))
+      if ((e.peer.getButton == java.awt.event.MouseEvent.BUTTON1) && (selected == None)) {
+        
+        val p = this.pile.pieces(0)
+        
+        if (coords != None && (this.board.getPiece(coords.get) == None)) {
+          val u: Boolean = {
+            if (ups.contains(coords.get)) false else true
+          }
+          this.board.addPiece(new Piece(p.symbols(0), p.symbols(1), p.symbols(2), coords, u))
+          this.pile.remove(p)
+          update()
+          pilePic.repaint()
+          
+        }
+      } else if (e.peer.getButton == java.awt.event.MouseEvent.BUTTON2) {  // the pieces on the board can be rotated by clicking the right button of the mouse on the piece
+        if (coords != None && (this.board.getPiece(coords.get) != None)) {
+          this.board.getPiece(coords.get).get.rotate
+          update()
+          pilePic.repaint()
+        }
+      }
+    }
     case ButtonClicked(`newGameButton`) =>
       startGame
       println("Game started")
@@ -216,8 +323,9 @@ object puzzleApp extends SimpleSwingApplication {
       ???
     case ButtonClicked(`saveButton`)    =>
       val toSave = FileOperations.getString(this.game, this.board, this.pile)
-      FileOperations.writeToFile("???", toSave)
-    case e: MouseClicked => println("Mouse clicked at " + e.point)
+      FileOperations.writeToFile("trianglePuzzle.txt", toSave)
+    case s: MouseClicked => println("Mouse clicked at " + s.point)
+
   }
   
     

@@ -100,9 +100,9 @@ class Game(val board: Board) {
     
     //adding pieces of the fourth row
     for (i <- 2 until 6) {
-      val symbol: Char = board.getPiece((4, i-1)).get.symbols(if (i % 2 == 0) 2 else 1)
+      val symbol: Char = board.getPiece((4, i-1)).get.symbols(if (i % 2 != 0) 2 else 1)
       val placing = if (i % 2 == 0) 1 else 2 
-      val down = i % 2 == 0
+      val down = i % 2 != 0
       var piece = randomPieceWith1Req(symbol, Option(4, i), placing, down)
       
       board.addPiece(piece)  
