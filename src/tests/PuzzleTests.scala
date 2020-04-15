@@ -50,6 +50,12 @@ class PuzzleTests extends FlatSpec() {
     assert (piece1.equals(piece3) === false)
     
   }
+  "piece.flip" should "flip the piece" in {
+    val piece = new Piece('a', 'C', 'b', None, true)
+    val flip = piece.upsidedown
+    piece.flip
+    assert(flip != piece.upsidedown)
+  }
   
   "game.solutionFound" should "check if correct solution has been found" in {
     val board = new Board(Buffer[Piece]())

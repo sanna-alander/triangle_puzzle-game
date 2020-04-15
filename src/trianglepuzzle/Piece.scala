@@ -9,7 +9,6 @@ class Piece(symbol1: Char, symbol2: Char, symbol3: Char, coordinates: Option[(In
   var upsidedown: Boolean = down  // A variable that determines whether the triangle is upside down or not.
   
   var location = {
-    //println(coordinates)
     coordinates  // The first coordinate represents the row and the second represents the column that the piece is in. 
   }
   
@@ -41,6 +40,16 @@ class Piece(symbol1: Char, symbol2: Char, symbol3: Char, coordinates: Option[(In
     }
     
     values.exists( _ == true ) 
+  }
+  
+  def specificEquals(piece: Piece): Boolean = { // A method that checks that the two pieces are exactly the same, meaning that the rotaion is the same
+    
+    val values = Buffer[Boolean]()
+    
+    for (i <- 0 until 3) {
+      values += this.symbols(i) == piece.symbols(i)
+    }
+    values.forall( _ == true )
   }
   
 }  

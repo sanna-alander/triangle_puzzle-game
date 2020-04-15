@@ -142,10 +142,7 @@ class Game(val board: Board) {
 
       board.addPiece(piece)
     }
-    
-    //board.pieces.foreach(n => println(n.location))
-    //board.pieces.foreach(n => println(n.upsidedown))
-    // board.pieces.foreach(n => println(n.symbols))
+
     
     board
     

@@ -26,7 +26,7 @@ class Board(givenPieces: Buffer[Piece]) {
     val values = Buffer[Boolean]()
     
     for (i <- coords) {
-      values += this.getPiece(i) == another.getPiece(i)
+      values += (this.getPiece(i).get.specificEquals(another.getPiece(i).get)) && (this.getPiece(i).get.upsidedown == another.getPiece(i).get.upsidedown)
     }
     values.forall(_ == true)
   }

@@ -12,7 +12,7 @@ class Pile(givenPieces: Buffer[Piece]) {
     copied += new Piece(syms(0), syms(1), syms(2), None, i.upsidedown)
   }
   
-  //copied.foreach( _.updateLocation(None)) //Change the location of the pieces to None because in the pile the pieces don't have coordinates.
+  //Change the location of the pieces to None because in the pile the pieces don't have coordinates.
 
   var pieces: Buffer[Piece] = copied
   
@@ -42,7 +42,15 @@ class Pile(givenPieces: Buffer[Piece]) {
       val p = Random.nextInt(this.pieces.size)
       this.pieces(p).rotate
     }
-    this.pieces.reverse
+    
+    for (a <- 0 until 20) {
+      val p = Random.nextInt(this.pieces.size)
+      val i = Random.nextInt(this.pieces.size)
+      val piece1 = this.pieces(p)
+      val piece2 = this.pieces(i)
+      this.pieces.update(p, piece2)
+      this.pieces.update(i, piece1)
+    }
     
   }
 }
