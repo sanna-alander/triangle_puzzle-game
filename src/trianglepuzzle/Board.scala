@@ -4,10 +4,13 @@ import scala.collection.mutable.Buffer
 
 class Board(givenPieces: Buffer[Piece]) {
   
-  private val currentPieces = givenPieces
+  private var currentPieces = givenPieces
   
-  def pieces = this.currentPieces
+  def pieces: Buffer[Piece] = this.currentPieces
   
+  def empty() = { // this method empties the board.
+    currentPieces = Buffer[Piece]()
+  }
   
   def addPiece(piece: Piece) = {
     this.currentPieces += piece
@@ -43,6 +46,8 @@ class Board(givenPieces: Buffer[Piece]) {
       pieces2.append(i)
       
     }
+    //values.foreach(println(_))
+    //println(values.forall( _ == false ))
     values.forall( _ == false )
   }
   

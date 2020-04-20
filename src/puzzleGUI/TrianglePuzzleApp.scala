@@ -17,7 +17,7 @@ import scala.collection.mutable.Buffer
 import scala.math._
 
 
-object puzzleApp extends SimpleSwingApplication {
+object PuzzleApp extends SimpleSwingApplication {
 
   
   val triangle1 = ImageIO.read(new File("triangle1.png"))
@@ -113,7 +113,7 @@ object puzzleApp extends SimpleSwingApplication {
   var board = new Board(Buffer[Piece]())
   var game = new Game(board)
   var pile = new Pile(game.correctSolution.pieces)
-  pile.shuffle
+  pile.shuffle()
   var ended = false
  
   var selected: Option[Piece] = None  // This variable stores the current selected piece wrapped in an option.
@@ -122,7 +122,7 @@ object puzzleApp extends SimpleSwingApplication {
     board = new Board(Buffer[Piece]())
     game = new Game(board)
     pile = new Pile(game.correctSolution.pieces)
-    pile.shuffle
+    pile.shuffle()
     ended = false
     selected = None
     
@@ -139,6 +139,7 @@ object puzzleApp extends SimpleSwingApplication {
     pilePic.repaint()
   }
 
+  val ups = Buffer((1,1), (1,3), (1,5), (2,1), (2,3), (2,5), (2,7), (3,2), (3,4), (3,6), (4,2), (4,4))  // List of all the coordinates where the triangle isn't upsidedown.
   
   def drawTriangles(g: Graphics2D) = { // This is the method for drawing the triangles.
     g.setFont(new Font("Times New Roman", java.awt.Font.BOLD, 20))
@@ -186,11 +187,13 @@ object puzzleApp extends SimpleSwingApplication {
   val hintButton = new Button("Show Answer")  // I decided to add a button which makes the correct answer visible.
   val rotateButton = new Button("Rotate Piece") 
   
-  val shuffleButton = new Button("Shuffle")
+  val shuffleButton = new Button("-->")
+  val shuffleBack = new Button("<--")
   val shuffleText = new Label("Press to shuffle pieces")
   
   listenTo(newGameButton)
   listenTo(shuffleButton)
+  listenTo(shuffleBack)
   listenTo(saveButton)
   listenTo(loadButton)
   listenTo(rotateButton)
@@ -218,6 +221,7 @@ object puzzleApp extends SimpleSwingApplication {
   buttons.background = Color.WHITE
   
   shuffle.contents += shuffleButton
+  shuffle.contents += shuffleBack
   shuffle.contents += shuffleText
   shuffle.background = Color.WHITE
 
@@ -280,6 +284,13 @@ object puzzleApp extends SimpleSwingApplication {
       g.setFont(new Font("Times New Roman", java.awt.Font.BOLD, 20))
       g.drawString("Start new game by clicking the New Game button", (width/2).toInt, height.toInt + 80)
     }
+    
+    if (selected != None) {
+      g.setFont(new Font("Times New Roman", java.awt.Font.BOLD, 14))
+      val loc = positions.get(selected.get.location.get).get
+      g.drawString("Selected", loc._1+70, loc._2+45)
+      
+    }
   }
     
 
@@ -288,26 +299,26 @@ object puzzleApp extends SimpleSwingApplication {
 
 }
   
-  val ups = Buffer((1,1), (1,3), (1,5), (2,1), (2,3), (2,5), (2,7), (3,2), (3,4), (3,6), (4,2), (4,4))  // List of all the coordinates where the triangle isn't upsidedown.
+  
   
   
   reactions += {
     case e@ MouseClicked(src,point,mod,1,_) => {
       
       val coords = getCoords((point.x, point.y))
-      if ((e.peer.getButton == java.awt.event.MouseEvent.BUTTON1) && (selected == None)) {
+      if ((e.peer.getButton == java.awt.event.MouseEvent.BUTTON1) && (selected == None)) { // If there isn't a selected piece then a piece from the pile is added or a piece is selected.
         
-        if (coords != None && (this.board.getPiece(coords.get) == None)) {
+        if (coords != None && (this.board.getPiece(coords.get) == None)) { // if the clicked place doesn't have a triangle then the top piece from the pile is placed there.
           val p = this.pile.pieces(0)
           val u: Boolean = {
             if (ups.contains(coords.get)) false else true
           }
-          this.board.addPiece(new Piece(p.symbols(0), p.symbols(1), p.symbols(2), coords, u))
+          this.board.addPiece(new Piece(p.symbols(0), p.symbols(1), p.symbols(2), coords, u)) 
           this.pile.remove(p)
           update()
           
           
-        } else if (coords != None && (this.board.getPiece(coords.get) != None)) {
+        } else if (coords != None && (this.board.getPiece(coords.get) != None)) { // If there's a piece in the place, then that piece gets selected.
           selected = this.board.getPiece(coords.get)
           update2()
         }
@@ -320,12 +331,15 @@ object puzzleApp extends SimpleSwingApplication {
           
         } else if (coords != None && (this.board.getPiece(coords.get) != None)) {
           val sCoords = selected.get.location
-          if (selected.get.upsidedown != this.board.getPiece(coords.get).get.upsidedown) {
-            selected.get.flip
-            this.board.getPiece(coords.get).get.flip
-          }
-          selected.get.updateLocation(coords)
-          this.board.getPiece(coords.get).get.updateLocation(sCoords)
+          val sel = selected.get
+          val other = this.board.getPiece(coords.get).get
+          
+          sel.upsidedown = if (ups.contains(coords.get)) false else true
+          other.upsidedown = if (ups.contains(sCoords.get)) false else true
+          
+          sel.updateLocation(coords)
+          other.updateLocation(sCoords)
+          
           update()
           
         } else if (coords == None) {
@@ -353,17 +367,24 @@ object puzzleApp extends SimpleSwingApplication {
       println("Game started")
       pilePic.repaint()
     case ButtonClicked(`shuffleButton`) =>
-      this.pile.rotatePile
+      this.pile.rotatePile()
+      pilePic.repaint()
+    case ButtonClicked(`shuffleBack`)   =>
+      this.pile.rotateBack()
       pilePic.repaint()
     case ButtonClicked(`loadButton`)    =>
-      ???
+      val loaded = FileOperations.loadGame(FileOperations.readFile("trianglePuzzle.txt"))
+      this.game = loaded._2
+      this.board = loaded._1
+      this.pile = loaded._3
+      update()
     case ButtonClicked(`saveButton`)    =>
       val toSave = FileOperations.getString(this.game, this.board, this.pile)
       FileOperations.writeToFile("trianglePuzzle.txt", toSave)
     case ButtonClicked(`hintButton`)    =>
       println(this.game.correctSolution.pieces.map(_.symbols) zip (this.game.correctSolution.pieces.map(_.location.get)))
       
-      this.board.pieces.foreach( this.board.removePiece(_) )
+      this.board.empty()
       for (i <- this.game.correctSolution.pieces) {
         this.board.addPiece( new Piece(i.symbols(0), i.symbols(1), i.symbols(2), i.location, i.upsidedown) )
       }

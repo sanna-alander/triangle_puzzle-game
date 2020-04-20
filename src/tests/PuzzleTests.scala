@@ -15,10 +15,11 @@ class PuzzleTests extends FlatSpec() {
     val pieceB = new Piece('b', 'a', 'C', Option(2,4), false)
     val pieceC = new Piece('b', 'b', 'b', None, false)
   
-  "game.generateSolution" should "create a random solution" in {
+  "game.generateSolution" should "create a random solution" in {  // Most of the time this test passes but for some reason it sometimes doesn't (one in ten)
+                                                                  // even though I have checked that the value of solution.allDifferent is always true.
     val solution = thisgame.correctSolution
     assert(solution.pieces.size === 24)
-    assert(solution.allDifferent === true)
+    assert(solution.allDifferent)
   }
   
   
@@ -65,15 +66,23 @@ class PuzzleTests extends FlatSpec() {
     assert(game.solutionFound(solution) === true)
   }
   
-  "FileOperations.getString" should "get the string for saving" in {
+  "board.removePiece" should "remove piece correctly from the board" in {
+    val board = new Board(Buffer(pieceA, pieceB))
+    board.removePiece(pieceA)
+    board.removePiece(pieceB)
+    assert(board.pieces === Buffer[Piece]())
+  }
+  
+  "FileOperations.getString" should "get the string for saving" in {  // This test doesn't pass anymore and it's not supposed to.
     val board = new Board(Buffer(pieceA, pieceB))
     val game = new Game(board)
     val pile = new Pile(Buffer())
     
     assert(FileOperations.getString(game, board, pile) === 
-      Seq("B" + board.pieces(0).symbols.mkString + board.pieces(0).location.get._1 + board.pieces(0).location.get._2 + board.pieces(0).upsidedown, 
-          "B" + board.pieces(1).symbols.mkString + board.pieces(1).location.get._1 + board.pieces(1).location.get._2 + board.pieces(1).upsidedown))
+      Seq("B" + board.pieces(0).symbols.mkString + board.pieces(0).location.get._1 + board.pieces(0).location.get._2 + (if(board.pieces(0).upsidedown) 1 else 0), 
+          "B" + board.pieces(1).symbols.mkString + board.pieces(1).location.get._1 + board.pieces(1).location.get._2 + (if(board.pieces(0).upsidedown) 1 else 0)))
   }
+
   
   
 }

@@ -65,9 +65,10 @@ class Game(val board: Board) {
 
   
   def generateSolution: Board = {
-    val board = new Board(Buffer[Piece]()) 
+    val solutionBoard = new Board(Buffer[Piece]()) 
     
-    def check(p: Piece): Boolean = board.pieces.exists( _.equals(p) )
+    def check(p: Piece): Boolean = solutionBoard.pieces.exists( _.equals(p) ) // With this method the program checks if there's already a piece 
+                                                                              // added with the same symbols in the same order.
     
     def addFirst(row: Int, down: Boolean): Piece = {
       var piece = randomFirstPiece(row, down)
@@ -78,86 +79,138 @@ class Game(val board: Board) {
     }
     
     // adding the first pieces
-    board.addPiece(addFirst(1, false))
-    board.addPiece(addFirst(4, true))
-    board.addPiece(addFirst(2, false))
+    solutionBoard.addPiece(addFirst(1, false))
+    solutionBoard.addPiece(addFirst(4, true))
+    solutionBoard.addPiece(addFirst(2, false))
     
-    var row3First = randomPieceWith1Req(board.getPiece((2, 1)).get.symbols(0), Option(3, 1), 0, true)
+    var row3First = randomPieceWith1Req(solutionBoard.getPiece((2, 1)).get.symbols(0), Option(3, 1), 0, true)
     while (check(row3First)) {
-      row3First = randomPieceWith1Req(board.getPiece((2, 1)).get.symbols(0), Option(3, 1), 0, true)
+      row3First = randomPieceWith1Req(solutionBoard.getPiece((2, 1)).get.symbols(0), Option(3, 1), 0, true)
     }
-    board.addPiece(row3First)
+    solutionBoard.addPiece(row3First)
     
     //adding pieces of the first row
     for (i <- 2 until 6) {
-      val symbol: Char = board.getPiece((1, i-1)).get.symbols(if (i % 2 == 0) 2 else 1)
+      val symbol: Char = solutionBoard.getPiece((1, i-1)).get.symbols(if (i % 2 == 0) 2 else 1)
       val placing = if (i % 2 != 0) 1 else 2 
       val down = i % 2 == 0
       var piece = randomPieceWith1Req(symbol, Option(1, i), placing, down)
-      
-      board.addPiece(piece)  
+      if (check(piece)) piece = randomPieceWith1Req(symbol, Option(1, i), placing, down)
+      solutionBoard.addPiece(piece)  
     }
     
     //adding pieces of the fourth row
     for (i <- 2 until 6) {
-      val symbol: Char = board.getPiece((4, i-1)).get.symbols(if (i % 2 != 0) 2 else 1)
+      val symbol: Char = solutionBoard.getPiece((4, i-1)).get.symbols(if (i % 2 != 0) 2 else 1)
       val placing = if (i % 2 == 0) 1 else 2 
       val down = i % 2 != 0
       var piece = randomPieceWith1Req(symbol, Option(4, i), placing, down)
-      
-      board.addPiece(piece)  
+      if (check(piece)) piece = randomPieceWith1Req(symbol, Option(4, i), placing, down)
+      solutionBoard.addPiece(piece)  
     }
     
     //adding pieces of the second row
     for (i <- 2 until 8) {
       if (i % 2 == 0) {
         val symbols: (Char, Char) = {
-            (board.getPiece(1, i-1).get.symbols(0), board.getPiece(2, i-1).get.symbols(2))
+            (solutionBoard.getPiece(1, i-1).get.symbols(0), solutionBoard.getPiece(2, i-1).get.symbols(2))
         }
         val placings = (0, 2)
         val down = true
         var piece = randomPieceWith2Req(symbols, Option(2, i), placings, down)
-
-        board.addPiece(piece)
+        if (check(piece)) piece = randomPieceWith2Req(symbols, Option(2, i), placings, down)
+        solutionBoard.addPiece(piece)
         
       } else {
-        val symbol = board.getPiece(2, i-1).get.symbols(1)
+        val symbol = solutionBoard.getPiece(2, i-1).get.symbols(1)
         val placing = 1
         val down = false
         var piece = randomPieceWith1Req(symbol, Option(2, i), placing, down)
-
-        board.addPiece(piece)
+        if (check(piece)) piece = randomPieceWith1Req(symbol, Option(2, i), placing, down)
+        solutionBoard.addPiece(piece)
       }
         
     }
     
     //adding pieces of the third row
     for (i <- 2 until 8) {
-      val symbols = if (i % 2 == 0) (board.getPiece(4, i-1).get.symbols(0), board.getPiece(3, i-1).get.symbols(1)) else {
-        (board.getPiece(2, i).get.symbols(0), board.getPiece(3, i-1).get.symbols(2))
+      val symbols = if (i % 2 == 0) (solutionBoard.getPiece(4, i-1).get.symbols(0), solutionBoard.getPiece(3, i-1).get.symbols(1)) else {
+        (solutionBoard.getPiece(2, i).get.symbols(0), solutionBoard.getPiece(3, i-1).get.symbols(2))
       }
       val placings = if (i % 2 == 0) (0, 1) else (0, 2)
       val down = i % 2 != 0
       var piece = randomPieceWith2Req(symbols, Option(3, i), placings, down)
-
-      board.addPiece(piece)
+      if (check(piece)) piece = randomPieceWith2Req(symbols, Option(3, i), placings, down)
+      solutionBoard.addPiece(piece)
     }
 
     
-    board
+    solutionBoard
     
   }
   
-  private val solution: Board = {
+  private val solution: Board = { // Here the solution is finally created and saved.
     var solution = generateSolution
     while (!solution.allDifferent) solution = generateSolution
     solution
   }
   
-  def correctSolution = this.solution
+  def correctSolution: Board = this.solution  // Method for getting the correct solution.
   
-  def solutionFound(givenBoard: Board): Boolean = { //Checks whether the correct solution has been found.
-    givenBoard.pieces.size == 24 && givenBoard.equals(this.solution)
+  private def someSolutionFound(givenBoard: Board): Boolean = {  // It is possible to find other solutions to the puzzle than just the one that the
+                                                                 // program has come up with. This method checks if any answer has been found. 
+    val vals = Buffer[Boolean]()
+    
+    def shouldMatch(n: Char, m: Char): Boolean = {
+      if (n == 'A' && m == 'a') true
+      else if (n == 'B' && m == 'b') true 
+      else if (n == 'C' && m == 'c') true
+      else if (n == 'a' && m == 'A') true
+      else if (n == 'b' && m == 'B') true
+      else if (n == 'c' && m == 'C') true
+      else false
+    }
+    
+    def findSym(sym: Char) = {
+      sym match {
+        case 'a' => 'A'
+        case 'b' => 'B'
+        case 'c' => 'C'
+        case 'A' => 'a'
+        case 'B' => 'b'
+        case 'C' => 'c'
+      }
+    }
+    
+    for (a <- givenBoard.pieces) {
+      val l = a.location.get
+      if (a.upsidedown) {
+        vals += shouldMatch(a.symbols(0), if (l._1 == 1) findSym(a.symbols(0))
+        else if (l._1 == 2) givenBoard.getPiece((1, l._2 - 1)).get.symbols(0)
+        else if (l._1 == 3) givenBoard.getPiece((2, l._2)).get.symbols(0)
+        else givenBoard.getPiece((3, l._2 + 1)).get.symbols(0))
+        vals += shouldMatch(a.symbols(1), if (l._1 == 3 && l._2 == 7 || l._1 == 4 && l._2 == 5) findSym(a.symbols(1))
+        else givenBoard.getPiece((l._1, l._2 + 1)).get.symbols(1))
+        vals += shouldMatch(a.symbols(2), if (l._1 == 3 && l._2 == 1 || l._1 == 4 && l._2 == 1) findSym(a.symbols(2))
+        else givenBoard.getPiece((l._1, l._2 - 1)).get.symbols(2))
+      } else {
+        vals += shouldMatch(a.symbols(0), if (l._1 == 4) findSym(a.symbols(0))
+        else if (l._1 == 1) givenBoard.getPiece((2, l._2 + 1)).get.symbols(0)
+        else if (l._1 == 2) givenBoard.getPiece((3, l._2)).get.symbols(0)
+        else givenBoard.getPiece((4, l._2 - 1)).get.symbols(0))
+        vals += shouldMatch(a.symbols(1), if (l._1 == 1 && l._2 == 1 || l._1 == 2 && l._2 == 1) findSym(a.symbols(1))
+        else givenBoard.getPiece((l._1, l._2 - 1)).get.symbols(1))
+        vals += shouldMatch(a.symbols(2), if (l._1 == 1 && l._2 == 5 || l._1 == 2 && l._2 == 7) findSym(a.symbols(2))
+        else givenBoard.getPiece((l._1, l._2 + 1)).get.symbols(2))
+      }
+
+    }
+    
+    vals.forall( _ == true )
+  }
+  
+  def solutionFound(givenBoard: Board): Boolean = { //Checks whether a correct solution has been found.
+    ( givenBoard.pieces.size == 24 && givenBoard.equals(this.solution) ) || ( givenBoard.pieces.size == 24 && someSolutionFound(givenBoard) )
   }
 
   

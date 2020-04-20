@@ -42,7 +42,7 @@ class Piece(symbol1: Char, symbol2: Char, symbol3: Char, coordinates: Option[(In
     values.exists( _ == true ) 
   }
   
-  def specificEquals(piece: Piece): Boolean = { // A method that checks that the two pieces are exactly the same, meaning that the rotaion is the same
+  def specificEquals(piece: Piece): Boolean = { // A method that checks that the two pieces are exactly the same, meaning that the rotation is the same
     
     val values = Buffer[Boolean]()
     
