@@ -144,7 +144,6 @@ class Game(val board: Board) {
       solutionBoard.addPiece(piece)
     }
 
-    
     solutionBoard
     
   }

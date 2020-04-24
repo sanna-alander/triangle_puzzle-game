@@ -41,7 +41,7 @@ object PuzzleApp extends SimpleSwingApplication {
                  (4,4) -> (4*((boardwidth/8).toInt)+10,3*(boardheight/4).toInt), (4,5) -> (5*((boardwidth/8).toInt)+10,3*(boardheight/4).toInt))
                  
                  
-  
+  // The areas where the mouse click can happen.
   val x1 = 170 to 230
   val y1 = 10 to 90
   val x2 = 270 to 330
@@ -180,13 +180,14 @@ object PuzzleApp extends SimpleSwingApplication {
 
   }
 
-  
+  // Adding the buttons
   val saveButton = new Button("Save")
   val newGameButton = new Button("New game")
   val loadButton = new Button("Load game")
   val hintButton = new Button("Show Answer")  // I decided to add a button which makes the correct answer visible.
   val rotateButton = new Button("Rotate Piece") 
   
+  // Buttons for going through the pile:
   val shuffleButton = new Button("-->")
   val shuffleBack = new Button("<--")
   val shuffleText = new Label("Press to shuffle pieces")
@@ -212,6 +213,7 @@ object PuzzleApp extends SimpleSwingApplication {
   
   listenTo(pilePic.mouse.clicks, pilePic.mouse.moves)
   
+  // Adding all the contents into panels.
   buttons.contents += saveButton
   buttons.contents += newGameButton
   buttons.contents += loadButton
@@ -303,7 +305,7 @@ object PuzzleApp extends SimpleSwingApplication {
   
   
   reactions += {
-    case e@ MouseClicked(src,point,mod,1,_) => {
+    case e@ MouseClicked(src,point,mod,1,_) => { //If the mouse is clicked
       
       val coords = getCoords((point.x, point.y))
       if ((e.peer.getButton == java.awt.event.MouseEvent.BUTTON1) && (selected == None)) { // If there isn't a selected piece then a piece from the pile is added or a piece is selected.
@@ -322,14 +324,14 @@ object PuzzleApp extends SimpleSwingApplication {
           selected = this.board.getPiece(coords.get)
           update2()
         }
-      } else if ((e.peer.getButton == java.awt.event.MouseEvent.BUTTON1) && (selected != None)) {
+      } else if ((e.peer.getButton == java.awt.event.MouseEvent.BUTTON1) && (selected != None)) { // If there's already a piece selected
         
-        if (coords != None && (this.board.getPiece(coords.get) == None)) {
+        if (coords != None && (this.board.getPiece(coords.get) == None)) { // If there's no piece in the clicked area then the selected piece is moved there.
           selected.get.upsidedown = if (ups.contains(coords.get)) false else true
           selected.get.updateLocation(coords)
           update()
           
-        } else if (coords != None && (this.board.getPiece(coords.get) != None)) {
+        } else if (coords != None && (this.board.getPiece(coords.get) != None)) { // If there is a piece in the clicked place then the two pieces switch places. 
           val sCoords = selected.get.location
           val sel = selected.get
           val other = this.board.getPiece(coords.get).get
@@ -342,7 +344,7 @@ object PuzzleApp extends SimpleSwingApplication {
           
           update()
           
-        } else if (coords == None) {
+        } else if (coords == None) { // If the click doesn't happen in any place but somewhere out of the board for example, then the piece is removed and moved back to the pile.
           this.board.removePiece(selected.get)
           this.pile.add(selected.get)
           update()
@@ -388,6 +390,7 @@ object PuzzleApp extends SimpleSwingApplication {
       for (i <- this.game.correctSolution.pieces) {
         this.board.addPiece( new Piece(i.symbols(0), i.symbols(1), i.symbols(2), i.location, i.upsidedown) )
       }
+      
       this.pile.pieces = Buffer[Piece]()
       update()
     

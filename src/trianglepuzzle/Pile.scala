@@ -44,7 +44,7 @@ class Pile(givenPieces: Buffer[Piece]) {
   def shuffle() = {   //shuffles the pile and changes the rotation and flip of the pieces
                     // This method is called when a new game is started and the pieces are set into a pile. 
     
-    for (a <- 0 until 10) {
+    for (a <- 0 until 20) {
       val p = Random.nextInt(this.pieces.size)
       this.pieces(p).flip
     }
