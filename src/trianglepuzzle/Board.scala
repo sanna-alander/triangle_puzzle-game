@@ -46,8 +46,7 @@ class Board(givenPieces: Buffer[Piece]) {
       pieces2.append(i)
       
     }
-    values.foreach(println(_))
-    println(values.forall( _ == false ))
+
     values.forall( _ == false )
   }
   

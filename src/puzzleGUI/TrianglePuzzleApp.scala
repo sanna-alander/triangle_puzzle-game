@@ -118,7 +118,7 @@ object PuzzleApp extends SimpleSwingApplication {
  
   var selected: Option[Piece] = None  // This variable stores the current selected piece wrapped in an option.
   
-  def startGame() = {
+  def startGame() = { // Starts a new game
     board = new Board(Buffer[Piece]())
     game = new Game(board)
     pile = new Pile(game.correctSolution.pieces)
@@ -127,7 +127,7 @@ object PuzzleApp extends SimpleSwingApplication {
     selected = None
     
   }
-  
+  // These methods are for automatically checking the board etc.
   def update() = {
     selected = None
     ended = this.game.solutionFound(this.board)

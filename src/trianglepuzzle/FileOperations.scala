@@ -116,6 +116,7 @@ object FileOperations {
         case 'B' => board.addPiece(new Piece(syms._1, syms._2, syms._3, loc, flip))
         case 'P' => pile.add(new Piece(syms._1, syms._2, syms._3, None, flip))
         case 'S' => solution.addPiece(new Piece(syms._1, syms._2, syms._3, loc, flip))
+        case _   =>
       }
     }
 
