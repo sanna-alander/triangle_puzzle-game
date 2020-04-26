@@ -26,7 +26,7 @@ object PuzzleApp extends SimpleSwingApplication {
   val boardwidth = 800.0
   val boardheight = 4 * sqrt(pow(boardwidth/7, 2) - pow(boardwidth/14,2))
   
-  // The map below is for finding the position for a triangle based on the coordinates give.
+  // The map below is for finding the position for a triangle based on the coordinates given.
   val positions = Map((1,1) -> ((boardwidth/8).toInt+10, 0), (1,2) -> (2*((boardwidth/8).toInt)+10,0), (1,3) -> (3*((boardwidth/8).toInt)+10,0),
                  (1,4) -> (4*((boardwidth/8).toInt)+10,0), (1,5) -> (5*((boardwidth/8).toInt)+10,0), (2,1) -> (10, (boardheight/4).toInt),
                  (2,2) -> (10+(boardwidth/8).toInt, (boardheight/4).toInt), (2,3) -> (10+2*(boardwidth/8).toInt, (boardheight/4).toInt),
@@ -350,7 +350,7 @@ object PuzzleApp extends SimpleSwingApplication {
           update()
         }
         
-      } else if (e.peer.getButton == java.awt.event.MouseEvent.BUTTON2) {  // the pieces on the board can be rotated by clicking the right button of the mouse on the piece
+      } else if (e.peer.getButton == java.awt.event.MouseEvent.BUTTON3) {  // the pieces on the board can be rotated by clicking the right button of the mouse on the piece
         if (coords != None && (this.board.getPiece(coords.get) != None)) {
           this.board.getPiece(coords.get).get.rotate
           update2()

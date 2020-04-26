@@ -38,7 +38,7 @@ class Game(val board: Board) {
   }
   
   private def randomPieceWith2Req(symbols: (Char, Char), coordinates: Option[(Int, Int)], placings: (Int, Int), down: Boolean): Piece = {
-    
+  // A method for creating a random piece that has requirements for two of its symbols.   
 
     def findSym(sym: Char) = {
       sym match {

@@ -16,10 +16,19 @@ class PuzzleTests extends FlatSpec() {
     val pieceC = new Piece('b', 'b', 'b', None, false)
   
   "game.generateSolution" should "create a random solution" in {  // Most of the time this test passes but for some reason it sometimes doesn't (one in ten)
-                                                                  // even though I have checked that the value of solution.allDifferent is always true.
+                                                                  // even though I have checked that the value of solution.allDifferent is always true when
+                                                                  // the game is actually played or at least I have not been able to find the same problem there.
     val solution = thisgame.correctSolution
     assert(solution.pieces.size === 24)
     assert(solution.allDifferent)
+  }
+  
+  "board.allDifferent" should "check if all of the pieces in the board are different" in {
+    val board = new Board(Buffer(pieceA, pieceB, pieceC))
+    val board2 = new Board(Buffer(pieceA, pieceC))
+    
+    assert(!board.allDifferent)
+    assert(board2.allDifferent)
   }
   
   
@@ -67,9 +76,9 @@ class PuzzleTests extends FlatSpec() {
   }
   
   "board.removePiece" should "remove piece correctly from the board" in {
-    val board = new Board(Buffer(pieceA, pieceB))
+    val board = new Board(Buffer(pieceA, pieceC))
     board.removePiece(pieceA)
-    board.removePiece(pieceB)
+    board.removePiece(pieceC)
     assert(board.pieces === Buffer[Piece]())
   }
   
